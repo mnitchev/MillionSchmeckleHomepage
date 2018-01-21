@@ -2,7 +2,6 @@ package bg.unisofia.s81167.persistence;
 
 import bg.unisofia.s81167.model.Pixel;
 import bg.unisofia.s81167.model.User;
-import bg.unisofia.s81167.service.PixelAllocationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
