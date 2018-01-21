@@ -1,0 +1,9 @@
+language: java
+jdk:
+  - openjdk8
+sudo: required
+script: mvn clean verify
+notifications:
+  slack:
+    on_success: never
+    on_failure: always
