@@ -1,7 +1,10 @@
-package bg.unisofia.s81167.persistence;
+package bg.unisofia.s81167.persistence.pixel;
 
 import bg.unisofia.s81167.model.Pixel;
 import bg.unisofia.s81167.model.User;
+import bg.unisofia.s81167.persistence.DataSourceFactory;
+import bg.unisofia.s81167.persistence.PersistenceException;
+import bg.unisofia.s81167.persistence.PersistenceInitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +60,7 @@ public class MySqlPixelDataAccessObject implements PixelDataAccessObject {
     }
 
     @Override
-    public boolean allocatePixel(User user, Pixel pixel) throws PersistenceException{
+    public boolean allocatePixel(User user, Pixel pixel) throws PersistenceException {
         try (Connection connection = dataSource.getConnection()) {
             if (pixelExists(connection, pixel)) {
                 LOGGER.debug("Pixel : {} already allocated.", pixel);

@@ -1,4 +1,4 @@
-package bg.unisofia.s81167.persistence;
+package bg.unisofia.s81167.persistence.pixel;
 
 public enum PixelsPreparedStatements {
     CREATE_TABLE("CREATE TABLE %s (username VARCHAR(25), x INT," +
