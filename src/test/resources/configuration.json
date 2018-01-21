@@ -1,0 +1,10 @@
+{
+  "driverClassName": "com.mysql.cj.jdbc.Driver",
+  "username": "user1",
+  "password": "password1",
+  "databaseUrl": "data.base.url",
+  "maxActiveConnections": 15,
+  "maxIdleConnections": 5,
+  "initialPoolSize": 5,
+  "validationQuery": "Select 1"
+}
