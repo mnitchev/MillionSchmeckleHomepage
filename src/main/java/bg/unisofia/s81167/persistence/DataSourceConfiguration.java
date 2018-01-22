@@ -5,6 +5,7 @@ public class DataSourceConfiguration {
     private String driverClassName;
     private String username;
     private String password;
+    private String databaseName;
     private String databaseUrl;
     private int maxActiveConnections;
     private int maxIdleConnections;
@@ -21,6 +22,10 @@ public class DataSourceConfiguration {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getDatabaseName() {
+        return databaseName;
     }
 
     public String getDatabaseUrl() {

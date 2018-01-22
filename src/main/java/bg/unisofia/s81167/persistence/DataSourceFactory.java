@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 public class DataSourceFactory {
 
     private static final String DEFAULT_CONFIGURATION_FILE_PATH = "configuration.json";
+    private static final String DISABLE_SSL = "?useSSL=false";
     private static DataSource pixelDao;
 
     public static DataSource getDataSourceSingleton() {
@@ -34,13 +35,17 @@ public class DataSourceFactory {
         dataSource.setDriverClassName(configuration.getDriverClassName());
         dataSource.setUsername(configuration.getUsername());
         dataSource.setPassword(configuration.getPassword());
-        dataSource.setUrl(configuration.getDatabaseUrl());
+        dataSource.setUrl(getDatabaseUrl(configuration));
         dataSource.setMaxActive(configuration.getMaxActiveConnections());
         dataSource.setMaxIdle(configuration.getMaxIdleConnections());
         dataSource.setInitialSize(configuration.getInitialPoolSize());
         dataSource.setValidationQuery(configuration.getValidationQuery());
 
         return dataSource;
+    }
+
+    private static String getDatabaseUrl(DataSourceConfiguration configuration) {
+        return configuration.getDatabaseUrl() + configuration.getDatabaseName() + DISABLE_SSL;
     }
 
 }

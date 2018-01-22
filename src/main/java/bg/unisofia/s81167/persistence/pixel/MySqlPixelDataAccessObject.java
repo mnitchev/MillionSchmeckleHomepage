@@ -13,50 +13,12 @@ import java.sql.*;
 
 public class MySqlPixelDataAccessObject implements PixelDataAccessObject {
 
+    public static final String TABLE_NAME = "Pixels";
     private static final Logger LOGGER = LoggerFactory.getLogger(MySqlPixelDataAccessObject.class);
-    private static final String TABLE_NAME = "Pixels";
     private final DataSource dataSource;
 
     public MySqlPixelDataAccessObject() {
         this.dataSource = DataSourceFactory.getDataSourceSingleton();
-        initializeDatabase();
-    }
-
-    private void initializeDatabase() {
-        try (Connection connection = dataSource.getConnection()) {
-            DatabaseMetaData metadata = connection.getMetaData();
-            if (tableExists(metadata)) {
-                LOGGER.debug("Table {} already exists.", TABLE_NAME);
-                return;
-            }
-            LOGGER.debug("Table {} does not exist. Creating table.", TABLE_NAME);
-            createTable(connection);
-            addDeleteEvent(connection);
-        } catch (SQLException e) {
-            final String message = "Failed to initialize database.";
-            LOGGER.error(message, e);
-
-            throw new PersistenceInitializationException(message, e);
-        }
-    }
-
-    private void addDeleteEvent(Connection connection) throws SQLException {
-        final String updateEvent = PixelsPreparedStatements.DELETE_OLD_EVENT.getStatement(TABLE_NAME);
-        final PreparedStatement statement = connection.prepareStatement(updateEvent);
-
-        statement.execute();
-    }
-
-    private void createTable(Connection connection) throws SQLException {
-        final String createTablePreparedStatement = PixelsPreparedStatements.CREATE_TABLE.getStatement(TABLE_NAME);
-        final PreparedStatement statement = connection.prepareStatement(createTablePreparedStatement);
-        statement.executeUpdate();
-    }
-
-    private boolean tableExists(DatabaseMetaData metadata) throws SQLException {
-        try (ResultSet tables = metadata.getTables(null, null, TABLE_NAME, null)) {
-            return tables.next();
-        }
     }
 
     @Override

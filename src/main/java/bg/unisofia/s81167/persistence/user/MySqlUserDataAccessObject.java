@@ -3,53 +3,25 @@ package bg.unisofia.s81167.persistence.user;
 import bg.unisofia.s81167.model.User;
 import bg.unisofia.s81167.persistence.DataSourceFactory;
 import bg.unisofia.s81167.persistence.PersistenceException;
-import bg.unisofia.s81167.persistence.PersistenceInitializationException;
 import bg.unisofia.s81167.persistence.pixel.MySqlPixelDataAccessObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class MySqlUserDataAccessObject implements UserDataAccessObject {
 
-    private static final String TABLE_NAME = "Users";
+    public static final String TABLE_NAME = "Users";
     private static final Logger LOGGER = LoggerFactory.getLogger(MySqlPixelDataAccessObject.class);
 
     private final DataSource dataSource;
 
     public MySqlUserDataAccessObject() {
         this.dataSource = DataSourceFactory.getDataSourceSingleton();
-        initializeDatabase();
-    }
-
-    private void initializeDatabase() {
-        try (Connection connection = dataSource.getConnection()) {
-            DatabaseMetaData metadata = connection.getMetaData();
-            if (tableExists(metadata)) {
-                LOGGER.debug("Table {} already exists.", TABLE_NAME);
-                return;
-            }
-            LOGGER.debug("Table {} does not exist. Creating table.", TABLE_NAME);
-            createTable(connection);
-        } catch (SQLException e) {
-            final String message = "Failed to initialize database.";
-            LOGGER.error(message, e);
-
-            throw new PersistenceInitializationException(message, e);
-        }
-    }
-
-    private void createTable(Connection connection) throws SQLException {
-        final String createTablePreparedStatement = UsersPreparedStatements.CREATE_TABLE.getStatement(TABLE_NAME);
-        final PreparedStatement statement = connection.prepareStatement(createTablePreparedStatement);
-        statement.executeUpdate();
-    }
-
-    private boolean tableExists(DatabaseMetaData metadata) throws SQLException {
-        try (ResultSet tables = metadata.getTables(null, null, TABLE_NAME, null)) {
-            return tables.next();
-        }
     }
 
     @Override
