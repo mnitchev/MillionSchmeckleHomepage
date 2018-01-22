@@ -4,12 +4,14 @@ import bg.unisofia.s81167.model.Pixel;
 import bg.unisofia.s81167.model.User;
 import bg.unisofia.s81167.persistence.DataSourceFactory;
 import bg.unisofia.s81167.persistence.PersistenceException;
-import bg.unisofia.s81167.persistence.PersistenceInitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class MySqlPixelDataAccessObject implements PixelDataAccessObject {
 
@@ -36,6 +38,52 @@ public class MySqlPixelDataAccessObject implements PixelDataAccessObject {
 
             throw new PersistenceException(message, e);
         }
+    }
+
+    @Override
+    public Collection<Pixel> getAllPixels() throws PersistenceException {
+        try (Connection connection = dataSource.getConnection()) {
+            return getAllPixelsFromDatabase(connection);
+        } catch (SQLException e) {
+            final String message = "Failed to get all pixles from database.";
+            LOGGER.error(message, e);
+
+            throw new PersistenceException(message, e);
+        }
+    }
+
+    private Collection<Pixel> getAllPixelsFromDatabase(Connection connection) throws SQLException {
+        final ResultSet resultSet = executeGetAllPixelsQuery(connection);
+
+        return getPixelsFromResultSet(resultSet);
+    }
+
+    private Collection<Pixel> getPixelsFromResultSet(ResultSet resultSet) throws SQLException {
+        final List<Pixel> pixels = new ArrayList<>();
+        while(resultSet.next()){
+            final Pixel pixel = extractPixel(resultSet);
+            pixels.add(pixel);
+        }
+        return pixels;
+    }
+
+    private Pixel extractPixel(ResultSet resultSet) throws SQLException {
+        final int x = resultSet.getInt("x");
+        final int y = resultSet.getInt("y");
+        final int red = resultSet.getInt("red");
+        final int green = resultSet.getInt("green");
+        final int blue = resultSet.getInt("blue");
+
+        return new Pixel.Builder()
+                .withPosition(x, y)
+                .withColor(red, green, blue)
+                .build();
+    }
+
+    private ResultSet executeGetAllPixelsQuery(Connection connection) throws SQLException {
+        final String getAllPixelsStatement = PixelsPreparedStatements.GET_ALL_PIXELS.getStatement(TABLE_NAME);
+        final PreparedStatement statement = connection.prepareStatement(getAllPixelsStatement);
+        return statement.executeQuery();
     }
 
     private boolean persistPixelsInDatabase(Connection connection, User user, Pixel pixel) throws SQLException {

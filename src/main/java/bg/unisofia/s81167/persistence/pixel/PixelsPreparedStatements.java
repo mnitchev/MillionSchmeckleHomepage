@@ -7,6 +7,7 @@ public enum PixelsPreparedStatements {
             "CHECK (red >= 0 AND red <= 255 AND " +
             "green >= 0 AND green <= 255 AND " +
             "blue >= 0 AND blue <= 255))"),
+    GET_ALL_PIXELS("SELECT * FROM %s"),
     GET_PIXEL("SELECT x, y FROM %s WHERE x = ? AND y = ?"),
     INSERT_PIXEL("INSERT INTO %s VALUES (?, ?, ?, ?, ?, ?, NOW())"),
     DELETE_OLD_EVENT("CREATE EVENT AutoDeleteOldPixels " +
