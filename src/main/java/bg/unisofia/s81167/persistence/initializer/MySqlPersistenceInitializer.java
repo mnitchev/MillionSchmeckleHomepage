@@ -53,11 +53,11 @@ public class MySqlPersistenceInitializer implements PersistenceInitializer {
         final String createTableStatement = PixelsPreparedStatements.CREATE_TABLE.getStatement(PIXELS_TABLE_NAME);
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData metadata = connection.getMetaData();
-            if (tableExists(metadata, USERS_TABLE_NAME)) {
-                LOGGER.debug("Table {} already exists.", USERS_TABLE_NAME);
+            if (tableExists(metadata, PIXELS_TABLE_NAME)) {
+                LOGGER.debug("Table {} already exists.", PIXELS_TABLE_NAME);
                 return;
             }
-            LOGGER.debug("Table {} does not exist. Creating table.", USERS_TABLE_NAME);
+            LOGGER.debug("Table {} does not exist. Creating table.", PIXELS_TABLE_NAME);
             createTable(connection, createTableStatement);
             addDeleteOldPixelsEvent(connection);
         } catch (SQLException e) {
