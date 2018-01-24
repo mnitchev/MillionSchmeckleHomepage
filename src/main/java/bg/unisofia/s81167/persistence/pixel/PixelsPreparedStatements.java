@@ -13,7 +13,8 @@ public enum PixelsPreparedStatements {
     DELETE_OLD_EVENT("CREATE EVENT AutoDeleteOldPixels " +
             "ON SCHEDULE EVERY 1 MINUTE " +
             "DO " +
-            "DELETE FROM %s WHERE insertion < DATE_SUB(NOW(), INTERVAL 30 SECOND)");
+            "DELETE FROM %s WHERE insertion < DATE_SUB(NOW(), INTERVAL 30 SECOND)"),
+    TURN_ON_EVENT_SCHEDULER("SET GLOBAL event_scheduler=\"ON\"");
 
     private final String statement;
 

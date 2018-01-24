@@ -1,5 +1,7 @@
 package bg.unisofia.s81167.model;
 
+import java.util.Objects;
+
 public class Pixel {
 
     private int x;
@@ -60,6 +62,24 @@ public class Pixel {
 
     public int getBlue() {
         return blue;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final Pixel other = (Pixel) obj;
+        return Objects.equals(this.x, other.x)
+                && Objects.equals(this.y, other.y);
     }
 
     @Override

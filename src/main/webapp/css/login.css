@@ -1,0 +1,82 @@
+b {
+    font-family: "Georgia";
+}
+
+body {
+    text-align: center;
+    font-family: "Georgia";
+    background-image: url("background.png");
+    background-repeat: repeat;
+}
+
+main {
+    margin: auto;
+    max-width: 600px;
+}
+
+.login_form {
+    border: 3px solid #555;
+    background-color: white;
+}
+
+.failure_span {
+    background-color: #f44336;
+    border: none;
+    color: white;
+    margin: auto;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    position: relative;
+    display: inline-block;
+    font-size: 25px;
+    width: 300px;
+}
+
+.success_span {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    margin: auto;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    position: relative;
+    display: inline-block;
+    font-size: 25px;
+    width: 300px;
+}
+
+input {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #f44336;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+.imgcontainer {
+    text-align: center;
+    margin-left: 75px;
+}
+
+.container {
+    margin: auto;
+    padding: 16px;
+    background-color: white;
+}

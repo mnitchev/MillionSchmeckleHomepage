@@ -18,6 +18,7 @@ public class MySqlPersistenceInitializer implements PersistenceInitializer {
 
     private static final String USERS_TABLE_NAME = MySqlUserDataAccessObject.TABLE_NAME;
     private static final String PIXELS_TABLE_NAME = MySqlPixelDataAccessObject.TABLE_NAME;
+    private static final String TOKEN_TABLE_NAME = MySqlUserDataAccessObject.TOKEN_TABLE_NAME;
 
     private DataSource dataSource;
 
@@ -28,7 +29,53 @@ public class MySqlPersistenceInitializer implements PersistenceInitializer {
     @Override
     public void initialize() {
         initializeUsersTable();
+        initializeUserTokenTable();
         initializePixelsTable();
+        turnOnEventScheduler();
+    }
+
+    private void initializeUserTokenTable() {
+        final String createTableStatement = UsersPreparedStatements.CREATE_TOKEN_TABLE.getStatement(TOKEN_TABLE_NAME);
+        try (Connection connection = dataSource.getConnection()) {
+            DatabaseMetaData metadata = connection.getMetaData();
+            if (tableExists(metadata, TOKEN_TABLE_NAME)) {
+                LOGGER.debug("Table {} already exists.", TOKEN_TABLE_NAME);
+                return;
+            }
+            LOGGER.debug("Table {} does not exist. Creating table.", TOKEN_TABLE_NAME);
+            createTable(connection, createTableStatement);
+            addDeleteOldTokenEvent(connection);
+        } catch (SQLException e) {
+            final String message = "Failed to initialize database.";
+            LOGGER.error(message, e);
+
+            throw new PersistenceInitializationException(message, e);
+        }
+    }
+
+    private void addDeleteOldTokenEvent(Connection connection) throws SQLException {
+        final String addDeletOldTokensEvent = UsersPreparedStatements.DELETE_OLD_TOKENS_EVENT.
+                getStatement(TOKEN_TABLE_NAME);
+        final PreparedStatement statement = connection.prepareStatement(addDeletOldTokensEvent);
+        statement.executeUpdate();
+    }
+
+    private void turnOnEventScheduler() {
+        try (Connection connection = dataSource.getConnection()) {
+            setEventSchedulerOn(connection);
+        } catch (SQLException e) {
+            final String message = "Failed to initialize database.";
+            LOGGER.error(message, e);
+
+            throw new PersistenceInitializationException(message, e);
+        }
+    }
+
+    private void setEventSchedulerOn(Connection connection) throws SQLException {
+        final String turnOnEventSchedulerStatement = PixelsPreparedStatements.TURN_ON_EVENT_SCHEDULER.getStatement();
+        final PreparedStatement statement = connection.prepareStatement(turnOnEventSchedulerStatement);
+
+        statement.executeUpdate();
     }
 
     private void initializeUsersTable() {

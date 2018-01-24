@@ -1,14 +1,16 @@
 package bg.unisofia.s81167.persistence.pixel;
 
 import bg.unisofia.s81167.model.Pixel;
-import bg.unisofia.s81167.model.User;
 import bg.unisofia.s81167.persistence.DataSourceFactory;
 import bg.unisofia.s81167.persistence.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -24,16 +26,16 @@ public class MySqlPixelDataAccessObject implements PixelDataAccessObject {
     }
 
     @Override
-    public boolean allocatePixel(User user, Pixel pixel) throws PersistenceException {
+    public boolean allocatePixel(String username, Pixel pixel) throws PersistenceException {
         try (Connection connection = dataSource.getConnection()) {
             if (pixelExists(connection, pixel)) {
                 LOGGER.debug("Pixel : {} already allocated.", pixel);
                 return false;
             }
-            return persistPixelsInDatabase(connection, user, pixel);
+            return persistPixelsInDatabase(connection, username, pixel);
         } catch (SQLException e) {
             final String message = String.format("Failed to allocate pixels %s, for user %s.", pixel,
-                    user.getUsername());
+                    username);
             LOGGER.error(message, e);
 
             throw new PersistenceException(message, e);
@@ -86,12 +88,12 @@ public class MySqlPixelDataAccessObject implements PixelDataAccessObject {
         return statement.executeQuery();
     }
 
-    private boolean persistPixelsInDatabase(Connection connection, User user, Pixel pixel) throws SQLException {
-        LOGGER.debug("Allocating pixel : {}, for user : {}.", pixel, user.getUsername());
+    private boolean persistPixelsInDatabase(Connection connection, String username, Pixel pixel) throws SQLException {
+        LOGGER.debug("Allocating pixel : {}, for user : {}.", pixel, username);
 
         final String insertPixelStatement = PixelsPreparedStatements.INSERT_PIXEL.getStatement(TABLE_NAME);
         final PreparedStatement statement = connection.prepareStatement(insertPixelStatement);
-        statement.setString(1, user.getUsername());
+        statement.setString(1, username);
         statement.setInt(2, pixel.getX());
         statement.setInt(3, pixel.getY());
         statement.setInt(4, pixel.getRed());

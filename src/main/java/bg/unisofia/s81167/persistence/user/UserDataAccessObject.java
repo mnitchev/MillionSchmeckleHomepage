@@ -11,4 +11,11 @@ public interface UserDataAccessObject {
 
     void registerUser(User user) throws PersistenceException;
 
+    boolean userHasToken(String username) throws PersistenceException;
+
+    void addUserToken(String username, String token) throws PersistenceException;
+
+    String getUserToken(String username) throws PersistenceException;
+
+    boolean tokenValid(String token) throws PersistenceException;
 }

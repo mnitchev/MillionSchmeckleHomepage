@@ -16,6 +16,8 @@ import java.sql.SQLException;
 public class MySqlUserDataAccessObject implements UserDataAccessObject {
 
     public static final String TABLE_NAME = "Users";
+    public static final String TOKEN_TABLE_NAME = "Tokens";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(MySqlPixelDataAccessObject.class);
 
     private final DataSource dataSource;
@@ -61,6 +63,87 @@ public class MySqlUserDataAccessObject implements UserDataAccessObject {
             LOGGER.error(message, e);
             throw new PersistenceException(message, e);
         }
+    }
+
+    @Override
+    public boolean userHasToken(String username) throws PersistenceException {
+        try(Connection connection = dataSource.getConnection()){
+            return userHasToken(connection, username);
+        }  catch (SQLException e){
+            final String message = String.format("Failed to verify if user : %s has token.", username);
+            LOGGER.error(message, e);
+            throw new PersistenceException(message, e);
+        }
+    }
+
+    @Override
+    public void addUserToken(String username, String token) throws PersistenceException {
+        try(Connection connection = dataSource.getConnection()){
+            addUserToken(connection, username, token);
+        } catch (SQLException e){
+            final String message = String.format("Failed to verify if user : %s has token.", username);
+            LOGGER.error(message, e);
+            throw new PersistenceException(message, e);
+        }
+    }
+
+    private void addUserToken(Connection connection, String username, String token) throws SQLException {
+        final String addToken = UsersPreparedStatements.INSERT_TOKEN.getStatement(TOKEN_TABLE_NAME);
+        final PreparedStatement statement = connection.prepareStatement(addToken);
+        statement.setString(1, username);
+        statement.setString(2, token);
+
+        statement.executeUpdate();
+    }
+
+    @Override
+    public String getUserToken(String username) throws PersistenceException {
+        try (Connection connection = dataSource.getConnection()) {
+            return getUserToken(connection, username);
+        }  catch (SQLException e){
+            final String message = String.format("Failed to retrieve token for user : %s.", username);
+            LOGGER.error(message, e);
+            throw new PersistenceException(message, e);
+        }
+    }
+
+    @Override
+    public boolean tokenValid(String token) throws PersistenceException {
+        try (Connection connection = dataSource.getConnection()) {
+            return tokenValid(connection, token);
+        } catch (SQLException e) {
+            final String message = String.format("Failed to validate token : %s.", token);
+            LOGGER.error(message, e);
+            throw new PersistenceException(message, e);
+        }
+    }
+
+    private boolean tokenValid(Connection connection, String token) throws SQLException {
+        final String getTokenQuery = UsersPreparedStatements.GET_TOKEN.getStatement(TOKEN_TABLE_NAME);
+        final PreparedStatement statement = connection.prepareStatement(getTokenQuery);
+        statement.setString(1, token);
+
+        final ResultSet resultSet = statement.executeQuery();
+        return resultSet.next();
+    }
+
+    private String getUserToken(Connection connection, String username) throws SQLException {
+        final ResultSet resultSet = executeGetUserTokenQuery(connection, username);
+        resultSet.next();
+        return resultSet.getString("token");
+    }
+
+    private boolean userHasToken(Connection connection, String username) throws SQLException {
+        final ResultSet resultSet = executeGetUserTokenQuery(connection, username);
+
+        return resultSet.next();
+    }
+
+    private ResultSet executeGetUserTokenQuery(Connection connection, String username) throws SQLException {
+        final String getUserTokenStatement = UsersPreparedStatements.GET_USER_TOKEN.getStatement(TOKEN_TABLE_NAME);
+        final PreparedStatement statement = connection.prepareStatement(getUserTokenStatement);
+        statement.setString(1, username);
+        return statement.executeQuery();
     }
 
     private User getUser(Connection connection, User user) throws SQLException {

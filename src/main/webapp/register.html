@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="javascript/register.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/login.css"></link>
+</head>
+
+<body onload="load()">
+    <main>
+        <h2 style="font-size: 52px;">Sign Up</h2>
+
+        <div class="login_form">
+            <div class=" imgcontainer ">
+                <img src="img/Schmeckles.png " alt="Avatar " style="margin: auto; ">
+            </div>
+
+            <div class="container">
+                <label>
+                    <b>Username</b>
+                </label>
+                <input type="text" placeholder="Enter Username " id="username" required>
+
+                <label>
+                    <b>Password</b>
+                </label>
+                <input type="password" placeholder="Enter Password " id="password" required>
+                <label>
+                    <b>Repeat Password</b>
+                </label>
+                <input type="password" placeholder="Repeat Password " id="password-repeat" required>
+                <button onclick="submitForm()">Sign Up</button>
+            </div>
+            <div id="success"></div>
+        </div>
+    </main>
+</body>
+
+</html>

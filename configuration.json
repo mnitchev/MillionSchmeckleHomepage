@@ -1,0 +1,11 @@
+{
+  "driverClassName": "com.mysql.cj.jdbc.Driver",
+  "username": "root",
+  "password": "Password1234",
+  "databaseName": "Pixels",
+  "databaseUrl": "jdbc:mysql://localhost:3306/",
+  "maxActiveConnections": 15,
+  "maxIdleConnections": 5,
+  "initialPoolSize": 5,
+  "validationQuery": "Select 1"
+}

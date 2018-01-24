@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<head>
+  <script src="javascript/jquery-3.3.1.min.js"></script>
+  <script src="javascript/homepage.js"></script>
+  <script stc="javascript/login.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/homepage.css"></link>
+</head>
+
+<body onload="start()">
+  <main>
+    <header>
+      <ul class="top_bar_ul">
+        <li class="top_bar_li">
+          <a class="top_bar_li_a"> Million Schmeckle Homepage</a>
+        </li>
+      </ul>
+    </header>
+
+    <nav>
+      <div>
+        <ul class="color_bar">
+          <div class="topnav">
+            <a id="white" class="active" style="background-color: rgb(255, 255, 255)" onclick="setCurrentColor(255, 255, 255, 'white')"></a>
+            <a id="gray" style="background-color: #999999" onclick="setCurrentColor(153, 153, 153, 'gray')"></a>
+            <a id="dark-gray" style="background-color: #555555" onclick="setCurrentColor(85, 85, 85, 'dark-gray')"></a>
+            <a id="black" style="background-color: #222" onclick="setCurrentColor(34, 34, 34, 'black')"></a>
+            <a id="pink" style="background-color: pink" onclick="setCurrentColor(255, 192, 203, 'pink')"></a>
+            <a id="red" style="background-color: red " onclick="setCurrentColor(255, 0, 0, 'red')"></a>
+            <a id="orange" style="background-color: orange" onclick="setCurrentColor(255, 165, 0, 'orange')"></a>
+            <a id="brown" style="background-color: brown " onclick="setCurrentColor(165, 42, 42, 'brown')"></a>
+            <a id="yellow" style="background-color: yellow " onclick="setCurrentColor(255, 255, 0, 'yellow')"></a>
+            <a id="greenyellow" style="background-color: greenyellow " onclick="setCurrentColor(173, 255, 47, 'greenyellow')"></a>
+            <a id="chartreuse" style="background-color: chartreuse " onclick="setCurrentColor(127, 255, 0, 'chartreuse')"></a>
+            <a id="aqua" style="background-color: aqua " onclick="setCurrentColor(0, 255, 255, 'aqua')"></a>
+            <a id="darkcyan" style="background-color: darkcyan " onclick="setCurrentColor(0, 139, 139, 'darkcyan')"></a>
+            <a id="darkblue" style="background-color: darkblue " onclick="setCurrentColor(0, 0, 139, 'darkblue')"></a>
+            <a id="magenta" style="background-color: magenta " onclick="setCurrentColor(255, 0, 255, 'magenta')"></a>
+            <a id="purple" style="background-color: purple " onclick="setCurrentColor(128, 0, 128, 'purple')"></a>
+          </div>
+        </ul>
+        <button class="submit_button" onclick="submitChanges()">Submit</button>
+      </div>
+    </nav>
+    <canvas id="homepage_canvas" width="1000 " height="1000 " onclick="storeChange(event)"></canvas>
+  </main>
+</body>
